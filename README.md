@@ -1,1 +1,1 @@
-# digilearn-ui
+# digilearn
