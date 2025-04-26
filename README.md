@@ -1,5 +1,6 @@
 # digilearn
 
+```markdown
 digilearn/
 │
 ├── apps/
@@ -33,3 +34,4 @@ digilearn/
 ├── .gitignore
 ├── README.md
 └── project_config.yaml          # Your own config if you automate builds/deploys
+```
