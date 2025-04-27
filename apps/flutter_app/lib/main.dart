@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
-import 'pages/landing_page.dart'; // <-- Import file LandingPage ở đây
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:seo/seo.dart';
+import 'core/routing/routing.dart';
 
 void main() {
-  runApp(const MyApp());
+  usePathUrlStrategy();
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Academy App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return SeoController(
+      enabled: true,
+      tree: WidgetTree(context: context),
+      child: MaterialApp.router(
+        title: 'Digilearn',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        routerDelegate: AppRoutes.router.routerDelegate,
+        routeInformationParser: AppRoutes.router.routeInformationParser,
+        routeInformationProvider: AppRoutes.router
+            .routeInformationProvider, // Explicitly set the routeInformationProvider
       ),
-      home: LandingPage(), // <-- Đặt LandingPage làm trang đầu tiên
     );
   }
 }

@@ -30,7 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  go_router: ^15.1.1 # Add the go_router package for URL-based routing
   url_launcher: ^6.1.7
+  seo: ^0.0.10
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -63,6 +65,10 @@ flutter:
     - assets/bravo.png
     - assets/logo_light.png
     - assets/logo_dark.png
+    - assets/book.png
+    - assets/math.png
+    - assets/physics.png
+    - assets/chemistry.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
