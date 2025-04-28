@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'top_bar.dart';
 import 'home_section.dart';
 import 'explore_section.dart';
-import 'generic_section.dart';
+import 'aboutus_section.dart';
 import 'bottom_bar.dart';
 
 class LandingPage extends StatefulWidget {
@@ -10,9 +10,7 @@ class LandingPage extends StatefulWidget {
 
   static final GlobalKey homeKey = GlobalKey();
   static final GlobalKey exploreKey = GlobalKey();
-  static final GlobalKey marketKey = GlobalKey();
-  static final GlobalKey servicesKey = GlobalKey();
-  static final GlobalKey blogKey = GlobalKey();
+  static final GlobalKey aboutUsKey = GlobalKey();
 
   @override
   _LandingPageState createState() => _LandingPageState();
@@ -67,12 +65,10 @@ class _LandingPageState extends State<LandingPage> {
                       key: LandingPage.exploreKey,
                       isDarkTheme: _isDarkTheme,
                     ),
-                    // GenericSection(
-                    //   key: LandingPage.blogKey,
-                    //   title: 'Blog Section',
-                    //   color: isDarkTheme ? Colors.white : Colors.black,
-                    //   isDarkTheme: _isDarkTheme,
-                    // ),
+                    AboutUsSection(
+                      key: LandingPage.aboutUsKey,
+                      isDarkTheme: _isDarkTheme,
+                    ),
                   ],
                 ),
               ),
@@ -98,7 +94,7 @@ class _LandingPageState extends State<LandingPage> {
 
     if (offset < screenHeight * 0.5) {
       _activeSection.value = 0;
-    } else if (offset < screenHeight * 1.5) {
+    } else if (offset < screenHeight * 1) {
       _activeSection.value = 1;
     } else {
       _activeSection.value = 2;

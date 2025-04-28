@@ -61,7 +61,7 @@ class _HomeSectionState extends State<HomeSection>
       animation: widget.isDarkTheme,
       builder: (context, child) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.9,
           width: MediaQuery.of(context).size.width,
           color: widget.isDarkTheme.value ? Colors.white : Colors.black,
           // padding: EdgeInsets.fromLTRB(0, 0, 0, 60),
@@ -121,7 +121,7 @@ class _HomeSectionState extends State<HomeSection>
           'DIGILEARN empowers you to explore science deeply and apply your knowledge with confidence. Join us to learn, practice, and achieve your academic goals.',
           style: TextStyle(
             fontSize: fontSizeSubtitle,
-            color: widget.isDarkTheme.value ? Colors.black : Colors.white,
+            color: widget.isDarkTheme.value ? Colors.grey[600] : Colors.white,
           ),
         ),
         const SizedBox(height: 20),

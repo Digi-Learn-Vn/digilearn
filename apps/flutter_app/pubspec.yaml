@@ -69,6 +69,7 @@ flutter:
     - assets/math.png
     - assets/physics.png
     - assets/chemistry.png
+    - assets/love.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

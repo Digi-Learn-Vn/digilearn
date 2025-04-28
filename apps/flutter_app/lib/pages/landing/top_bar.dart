@@ -53,9 +53,9 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
                     fontSize: fontSize,
                   ),
                   _NavLink(
-                    label: 'Blog',
+                    label: 'About Us',
                     isActive: activeSection == 2,
-                    onTap: () => scrollToSection(LandingPage.blogKey),
+                    onTap: () => scrollToSection(LandingPage.aboutUsKey),
                     isDarkTheme: isDarkTheme.value,
                     fontSize: fontSize,
                   ),
