@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_app/pages/landing/landing_page.dart';
+import 'package:flutter_app/pages/account/signin_page.dart';
+import 'package:flutter_app/pages/account/signup_page.dart';
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
@@ -10,9 +12,16 @@ class AppRoutes {
         builder: (context, state) => LandingPage(),
       ),
       GoRoute(
-        path: '/another',
-        builder: (context, state) => AnotherPage(),
+        path: '/account/signin',
+        builder: (context, state) => SigninPage(
+          isDarkTheme: ValueNotifier<bool>(true),
+        ),
       ),
+      GoRoute(
+          path: '/account/signup',
+          builder: (context, state) => SignupPage(
+                isDarkTheme: ValueNotifier<bool>(true),
+              )),
     ],
     errorBuilder: (context, state) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -25,18 +34,4 @@ class AppRoutes {
       );
     },
   );
-}
-
-class AnotherPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Another Page'),
-      ),
-      body: Center(
-        child: Text('Welcome to Another Page!'),
-      ),
-    );
-  }
 }

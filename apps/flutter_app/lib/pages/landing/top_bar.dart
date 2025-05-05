@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'landing_page.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
@@ -65,7 +66,9 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const Spacer(),
           OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              GoRouter.of(context).go('/account/signin');
+            },
             style: OutlinedButton.styleFrom(
               side: BorderSide.none,
               shape: RoundedRectangleBorder(
@@ -110,27 +113,30 @@ class _NavLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: fontSize,
-              fontWeight: FontWeight.w500,
-              color: isDarkTheme ? Colors.black : Colors.white,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w500,
+                color: isDarkTheme ? Colors.black : Colors.white,
+              ),
             ),
-          ),
-          const SizedBox(height: 4),
-          if (isActive)
-            Container(
-              height: 2,
-              width: 40,
-              color: isDarkTheme ? Colors.black : Colors.white,
-            ),
-        ],
+            const SizedBox(height: 4),
+            if (isActive)
+              Container(
+                height: 2,
+                width: 40,
+                color: isDarkTheme ? Colors.black : Colors.white,
+              ),
+          ],
+        ),
       ),
     );
   }

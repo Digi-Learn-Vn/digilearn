@@ -1,5 +1,6 @@
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeSection extends StatefulWidget {
   const HomeSection({Key? key, required this.isDarkTheme}) : super(key: key);
@@ -126,7 +127,9 @@ class _HomeSectionState extends State<HomeSection>
         ),
         const SizedBox(height: 20),
         OutlinedButton(
-          onPressed: () {},
+          onPressed: () {
+            GoRouter.of(context).go('/account/signup');
+          },
           style: OutlinedButton.styleFrom(
             side: BorderSide.none,
             shape: RoundedRectangleBorder(
