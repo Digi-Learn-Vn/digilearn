@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_app/core/services/auth.dart';
 
 class SignupPage extends StatefulWidget {
   final ValueNotifier<bool> isDarkTheme;
@@ -11,10 +12,51 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  // final ValueNotifier<bool> isDarkTheme = ValueNotifier<bool>(true);
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   bool _isPasswordVisible = false;
+  String? error;
+
+  void handleSignup() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final username = _usernameController.text;
+
+    if (email.isEmpty || password.isEmpty || username.isEmpty) {
+      setState(() {
+        error = 'Username, Email and password cannot be empty';
+      });
+      return;
+    }
+
+    final err = await register(username, email, password);
+    print('Signup result: $err'); // Log the result
+    if (err == null) {
+      setState(() {
+        error = null;
+      });
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Success'),
+          content: const Text('Account created successfully!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      setState(() {
+        error = err['message'] as String?;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +105,14 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 24),
                     TextField(
+                      controller: _usernameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Username',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
                       controller: _emailController,
                       decoration: const InputDecoration(
                         labelText: 'Email',
@@ -90,6 +140,17 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                       ),
                     ),
+                    if (error != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          error!,
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -104,9 +165,7 @@ class _SignupPageState extends State<SignupPage> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      onPressed: () {
-                        // Handle registration
-                      },
+                      onPressed: handleSignup,
                       child: const Text('Create account'),
                     ),
                     const SizedBox(height: 12),

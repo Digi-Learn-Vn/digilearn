@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_app/core/services/auth.dart';
 
 class SigninPage extends StatefulWidget {
   final ValueNotifier<bool> isDarkTheme;
@@ -11,10 +12,32 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
-  // final ValueNotifier<bool> isDarkTheme = ValueNotifier<bool>(true);
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+
+  void handleLogin() async {
+    final username = _usernameController.text;
+    final password = _passwordController.text;
+
+    if (username.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Username and password cannot be empty')),
+      );
+      return;
+    }
+
+    final result = await login(username, password);
+    print('Login result: $result'); // Log the result
+    if (result['status'] == 200) {
+      GoRouter.of(context).go('/dashboard');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(result['message'] ?? 'An unknown error occurred')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +86,9 @@ class _SigninPageState extends State<SigninPage> {
                     ),
                     const SizedBox(height: 24),
                     TextField(
-                      controller: _emailController,
+                      controller: _usernameController,
                       decoration: const InputDecoration(
-                        labelText: 'Email',
+                        labelText: 'Username',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -104,9 +127,7 @@ class _SigninPageState extends State<SigninPage> {
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
-                      onPressed: () {
-                        // Handle registration
-                      },
+                      onPressed: handleLogin,
                       child: const Text('Login now'),
                     ),
                     const SizedBox(height: 12),

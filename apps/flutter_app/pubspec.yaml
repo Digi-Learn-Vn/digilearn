@@ -33,6 +33,8 @@ dependencies:
   go_router: ^15.1.1 # Add the go_router package for URL-based routing
   url_launcher: ^6.1.7
   seo: ^0.0.10
+  http: ^1.4.0
+  flutter_secure_storage: ^9.2.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
