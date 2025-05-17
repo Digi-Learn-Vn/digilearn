@@ -35,3 +35,14 @@ digilearn/
 ├── README.md
 └── project_config.yaml          # Your own config if you automate builds/deploys
 ```
+
+## Install Devtools
+
+https://docs.flutter.dev/get-started/install/linux/web
+
+## How to run
+
+```
+cd apps/flutter_app
+flutter run -d web-server --web-port=8080
+```

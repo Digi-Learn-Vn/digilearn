@@ -13,24 +13,55 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _profilenameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repasswordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   bool _isPasswordVisible = false;
   String? error;
 
   void handleSignup() async {
     final email = _emailController.text;
+    final profilename = _usernameController.text;
     final password = _passwordController.text;
+    final repassword = _repasswordController.text;
     final username = _usernameController.text;
 
-    if (email.isEmpty || password.isEmpty || username.isEmpty) {
+    if (email.isEmpty ||
+        password.isEmpty ||
+        username.isEmpty ||
+        repassword.isEmpty ||
+        profilename.isEmpty) {
       setState(() {
-        error = 'Username, Email and password cannot be empty';
+        error = 'All fields are required';
       });
       return;
     }
 
-    final err = await register(username, email, password);
+    if (!RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(email)) {
+      setState(() {
+        error = 'Invalid email format';
+      });
+      return;
+    }
+
+    if (password != repassword) {
+      setState(() {
+        error = 'Passwords do not match';
+      });
+      return;
+    }
+
+    if (password.length < 8) {
+      setState(() {
+        error = 'Password must be at least 8 characters long';
+      });
+      return;
+    }
+
+    final err =
+        await register(username, profilename, email, password, repassword);
     print('Signup result: $err'); // Log the result
     if (err == null) {
       setState(() {
@@ -113,6 +144,14 @@ class _SignupPageState extends State<SignupPage> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      controller: _profilenameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Profile Name',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
                       controller: _emailController,
                       decoration: const InputDecoration(
                         labelText: 'Email',
@@ -125,6 +164,27 @@ class _SignupPageState extends State<SignupPage> {
                       obscureText: !_isPasswordVisible,
                       decoration: InputDecoration(
                         labelText: 'Password',
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _repasswordController,
+                      obscureText: !_isPasswordVisible,
+                      decoration: InputDecoration(
+                        labelText: 'Re-enter Password',
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: Icon(
