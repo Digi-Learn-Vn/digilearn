@@ -43,6 +43,7 @@ https://docs.flutter.dev/get-started/install/linux/web
 ## How to run
 
 ```
+git submodule update --init --recursive
 cd apps/flutter_app
 flutter run -d web-server --web-port=8080
 ```
