@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_app/core/theme/theme_provider.dart';
 import 'top_bar.dart';
 import 'home_section.dart';
 import 'explore_section.dart';
@@ -19,7 +21,6 @@ class LandingPage extends StatefulWidget {
 class _LandingPageState extends State<LandingPage> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<int> _activeSection = ValueNotifier<int>(0);
-  final ValueNotifier<bool> _isDarkTheme = ValueNotifier<bool>(true);
 
   @override
   void initState() {
@@ -32,59 +33,48 @@ class _LandingPageState extends State<LandingPage> {
     _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     _activeSection.dispose();
-    _isDarkTheme.dispose();
     super.dispose();
-  }
-
-  void _toggleTheme() {
-    _isDarkTheme.value = !_isDarkTheme.value;
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: _isDarkTheme,
-      builder: (context, isDarkTheme, child) {
-        return Scaffold(
-          appBar: TopBar(
-            isDarkTheme: _isDarkTheme,
-            activeSection: _activeSection,
-            scrollToSection: _scrollToSection,
-          ),
-          body: Stack(
-            children: [
-              SingleChildScrollView(
-                controller: _scrollController,
-                child: Column(
-                  children: [
-                    HomeSection(
-                      key: LandingPage.homeKey,
-                      isDarkTheme: _isDarkTheme,
-                    ),
-                    ExploreSection(
-                      key: LandingPage.exploreKey,
-                      isDarkTheme: _isDarkTheme,
-                    ),
-                    AboutUsSection(
-                      key: LandingPage.aboutUsKey,
-                      isDarkTheme: _isDarkTheme,
-                    ),
-                  ],
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return Scaffold(
+      appBar: TopBar(
+        isDarkTheme: ValueNotifier<bool>(themeProvider.isDarkTheme),
+        activeSection: _activeSection,
+        scrollToSection: _scrollToSection,
+      ),
+      body: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: _scrollController,
+            child: Column(
+              children: [
+                HomeSection(
+                  key: LandingPage.homeKey,
+                  isDarkTheme: ValueNotifier<bool>(themeProvider.isDarkTheme),
                 ),
-              ),
-              Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: BottomBar(
-                  isDarkTheme: _isDarkTheme,
-                  toggleTheme: _toggleTheme,
+                ExploreSection(
+                  key: LandingPage.exploreKey,
+                  isDarkTheme: ValueNotifier<bool>(themeProvider.isDarkTheme),
                 ),
-              ),
-            ],
+                AboutUsSection(
+                  key: LandingPage.aboutUsKey,
+                  isDarkTheme: ValueNotifier<bool>(themeProvider.isDarkTheme),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: BottomBar(),
+          ),
+        ],
+      ),
     );
   }
 

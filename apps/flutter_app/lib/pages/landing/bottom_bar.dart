@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_app/core/theme/theme_provider.dart';
 
 class BottomBar extends StatelessWidget {
-  final ValueNotifier<bool> isDarkTheme;
-  final VoidCallback toggleTheme;
-
-  const BottomBar({required this.isDarkTheme, required this.toggleTheme});
+  const BottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Align(
       alignment: Alignment.bottomRight,
       child: Container(
@@ -15,10 +16,10 @@ class BottomBar extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: IconButton(
           icon: Icon(
-            isDarkTheme.value ? Icons.dark_mode : Icons.light_mode,
+            themeProvider.isDarkTheme ? Icons.dark_mode : Icons.light_mode,
             size: 20,
           ),
-          onPressed: toggleTheme,
+          onPressed: themeProvider.toggleTheme,
         ),
       ),
     );

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_app/core/services/auth.dart';
+import 'package:flutter_app/core/theme/theme_provider.dart';
 
 class SigninPage extends StatefulWidget {
-  final ValueNotifier<bool> isDarkTheme;
-  const SigninPage({Key? key, required this.isDarkTheme}) : super(key: key);
+  const SigninPage({Key? key}) : super(key: key);
 
   @override
   _SigninPageState createState() => _SigninPageState();
@@ -15,6 +16,19 @@ class _SigninPageState extends State<SigninPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
+
+  Future<void> checkIfLoggedIn() async {
+    final accessToken = await getAccessToken();
+    if (accessToken != null && await verifyToken(accessToken)) {
+      GoRouter.of(context).go('/dashboard');
+    }
+  }
+
+  @override
+  void initState() {
+    checkIfLoggedIn();
+    super.initState();
+  }
 
   void handleLogin() async {
     final username = _usernameController.text;
@@ -28,7 +42,6 @@ class _SigninPageState extends State<SigninPage> {
     }
 
     final result = await login(username, password);
-    print('Login result: $result'); // Log the result
     if (result['status'] == 200) {
       GoRouter.of(context).go('/dashboard');
     } else {
@@ -41,12 +54,17 @@ class _SigninPageState extends State<SigninPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
+      backgroundColor: themeProvider.isDarkTheme ? Colors.white : Colors.black,
       appBar: AppBar(
-          backgroundColor:
-              widget.isDarkTheme.value ? Colors.white : Colors.black,
-          elevation: 1,
-          title: Row(
+        backgroundColor:
+            themeProvider.isDarkTheme ? Colors.white : Colors.black,
+        elevation: 0,
+        title: Column(children: [
+          const SizedBox(height: 14),
+          Row(
             children: [
               MouseRegion(
                 cursor: SystemMouseCursors.click,
@@ -55,7 +73,7 @@ class _SigninPageState extends State<SigninPage> {
                     GoRouter.of(context).go('/');
                   },
                   child: Image.asset(
-                    widget.isDarkTheme.value
+                    themeProvider.isDarkTheme
                         ? 'assets/logo_dark.png'
                         : 'assets/logo_light.png',
                     height: 40,
@@ -63,7 +81,16 @@ class _SigninPageState extends State<SigninPage> {
                 ),
               ),
             ],
-          )),
+          ),
+          ConstrainedBox(
+              constraints:
+                  BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
+              child: Divider(
+                color: themeProvider.isDarkTheme ? Colors.black : Colors.white,
+                thickness: 0.2,
+              )),
+        ]),
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Card(
@@ -165,7 +192,7 @@ class _SigninPageState extends State<SigninPage> {
         ),
       ),
       bottomNavigationBar: Container(
-        color: widget.isDarkTheme.value ? Colors.white : Colors.black,
+        color: themeProvider.isDarkTheme ? Colors.white : Colors.black,
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +205,7 @@ class _SigninPageState extends State<SigninPage> {
               "© 2025 Your Company",
               style: TextStyle(
                 fontSize: 12,
-                color: widget.isDarkTheme.value ? Colors.black : Colors.white,
+                color: themeProvider.isDarkTheme ? Colors.black : Colors.white,
               ),
             ),
           ],
@@ -188,6 +215,8 @@ class _SigninPageState extends State<SigninPage> {
   }
 
   Widget _buildLink(String label, String url, double fontSize) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -201,7 +230,7 @@ class _SigninPageState extends State<SigninPage> {
           label,
           style: TextStyle(
             fontSize: fontSize,
-            color: widget.isDarkTheme.value ? Colors.black : Colors.white,
+            color: themeProvider.isDarkTheme ? Colors.black : Colors.white,
           ),
         ),
       ),

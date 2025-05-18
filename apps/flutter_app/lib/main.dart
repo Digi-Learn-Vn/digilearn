@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:seo/seo.dart';
 import 'core/routing/routing.dart';
+import 'core/theme/theme_provider.dart';
 
 void main() {
   usePathUrlStrategy();
-  runApp(const App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {

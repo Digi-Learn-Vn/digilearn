@@ -13,10 +13,12 @@ Future<Map<String, dynamic>> login(String username, String password) async {
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({'username': username, 'password': password}),
   );
-  print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}');
   if (response.statusCode == 200) {
     final data = jsonDecode(response.body);
+    // Store JWT tokens if present
+    if (data['access'] != null && data['refresh'] != null) {
+      await storeTokens(data['access'], data['refresh']);
+    }
     return {
       'status': response.statusCode,
       'message': 'Login successful',
@@ -49,9 +51,6 @@ Future<Map<String, dynamic>> register(
     }),
   );
 
-  print('Register API response status: ${response.statusCode}');
-  print('Register API response body: ${response.body}');
-
   if (response.statusCode == 200) {
     return {
       'status': response.statusCode,
@@ -65,33 +64,89 @@ Future<Map<String, dynamic>> register(
   }
 }
 
-Future<Map<String, dynamic>> getCookieData() async {
-  final response = await http.get(
-    Uri.parse('$baseUrl/cookie/'),
+Future<void> storeTokens(String access, String refresh) async {
+  await storage.write(key: 'accessToken', value: access);
+  await storage.write(key: 'refreshToken', value: refresh);
+}
+
+Future<String?> getAccessToken() async {
+  return await storage.read(key: 'accessToken');
+}
+
+Future<String?> getRefreshToken() async {
+  return await storage.read(key: 'refreshToken');
+}
+
+Future<void> clearTokens() async {
+  await storage.delete(key: 'accessToken');
+  await storage.delete(key: 'refreshToken');
+}
+
+Future<bool> refreshAccessToken() async {
+  final refreshToken = await getRefreshToken();
+  if (refreshToken == null) return false;
+  final response = await http.post(
+    Uri.parse('http://127.0.0.1:8000/api/token/refresh/'),
     headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'refresh': refreshToken}),
   );
-
-  print('Cookie API response status: ${response.statusCode}');
-  print('Cookie API response headers: ${response.headers}');
-
   if (response.statusCode == 200) {
-    final cookies = response.headers['set-cookie'];
-    if (cookies != null) {
-      return {
-        'status': response.statusCode,
-        'message': 'Cookie data retrieved successfully',
-        'cookies': cookies,
-      };
-    } else {
-      return {
-        'status': response.statusCode,
-        'message': 'No cookies found in the response',
-      };
-    }
+    final data = jsonDecode(response.body);
+    await storeTokens(data['access'], refreshToken);
+    return true;
   } else {
-    return {
-      'status': response.statusCode,
-      'message': 'Failed to retrieve cookie data: ${response.body}',
-    };
+    await clearTokens();
+    return false;
+  }
+}
+
+Future<bool> verifyToken(String token) async {
+  final response = await http.post(
+    Uri.parse('$baseUrl/token/verify/'),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({'token': token}),
+  );
+  if (response.statusCode == 200) {
+    return true; // Token is valid
+  } else {
+    return false; // Token is invalid or expired
+  }
+}
+
+Future<http.Response?> authenticatedRequest(String url,
+    {String method = 'GET', Map<String, dynamic>? body}) async {
+  String? accessToken = await getAccessToken();
+  if (accessToken == null || !(await verifyToken(accessToken))) {
+    bool refreshed = await refreshAccessToken();
+    if (!refreshed) return null;
+    accessToken = await getAccessToken();
+  }
+  final headers = {
+    'Authorization': 'Bearer $accessToken',
+    'Content-Type': 'application/json',
+  };
+  final uri = Uri.parse(url);
+  if (method == 'GET') {
+    return await http.get(uri, headers: headers);
+  } else if (method == 'POST') {
+    return await http.post(uri,
+        headers: headers, body: body != null ? jsonEncode(body) : null);
+  }
+  return null;
+}
+
+Future<void> logout() async {
+  await clearTokens();
+}
+
+Future<Map<String, dynamic>?> getUserProfile() async {
+  final url = '$baseUrl/user/';
+  final response = await authenticatedRequest(url);
+
+  if (response != null && response.statusCode == 200) {
+    print('User profile response: ${response.body}');
+    return jsonDecode(response.body);
+  } else {
+    return null;
   }
 }
