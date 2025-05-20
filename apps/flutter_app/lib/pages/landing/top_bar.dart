@@ -99,12 +99,14 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxWidth: MediaQuery.of(context).size.width),
-              child: Divider(
-                color: isDarkTheme.value ? Colors.black : Colors.white,
-                thickness: 0.2,
-              )),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width,
+            ),
+            child: Divider(
+              color: isDarkTheme.value ? Colors.black : Colors.white,
+              thickness: 0.2,
+            ),
+          ),
         ],
       ),
     );
