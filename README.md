@@ -54,6 +54,7 @@ The project use script `deploy.py` for running the app
 ### Usage
 There are 2 stages:
 1. Build
+
 At this stage, the front end flutter is compiled to web asset (html, css, javascript), then copy to `build` folder of backend app 
 
 For easier integration, the `django` backend will serve the web asset. There is no need to run 2 separate servers (1 for deploy front end, 1 for backend).
