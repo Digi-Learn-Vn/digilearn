@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-const baseUrl =
-    'http://127.0.0.1:8000/accounts'; // Replace with your IP on real device
+const baseUrl = 'http://localhost:8080/api/accounts'; // Use nginx proxy URL
 
 final storage = FlutterSecureStorage();
 
@@ -86,7 +85,7 @@ Future<bool> refreshAccessToken() async {
   final refreshToken = await getRefreshToken();
   if (refreshToken == null) return false;
   final response = await http.post(
-    Uri.parse('http://127.0.0.1:8000/api/token/refresh/'),
+    Uri.parse('$baseUrl/api/token/refresh/'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({'refresh': refreshToken}),
   );
