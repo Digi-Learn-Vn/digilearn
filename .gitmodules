@@ -1,3 +1,4 @@
 [submodule "DigiLearnBackend"]
 	path = apps/DigiLearnBackend
 	url = git@github.com:Digi-Learn-Vn/DigiLearnBackend.git
+	branch = main
