@@ -21,19 +21,6 @@ class _SignupPageState extends State<SignupPage> {
   bool _isPasswordVisible = false;
   String? error;
 
-  Future<void> checkIfLoggedIn() async {
-    final accessToken = await getAccessToken();
-    if (accessToken != null && await verifyToken(accessToken)) {
-      GoRouter.of(context).go('/dashboard');
-    }
-  }
-
-  @override
-  void initState() {
-    checkIfLoggedIn();
-    super.initState();
-  }
-
   void handleSignup() async {
     final email = _emailController.text;
     final profilename = _usernameController.text;

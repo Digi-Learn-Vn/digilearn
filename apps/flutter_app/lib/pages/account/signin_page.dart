@@ -17,19 +17,6 @@ class _SigninPageState extends State<SigninPage> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
 
-  Future<void> checkIfLoggedIn() async {
-    final accessToken = await getAccessToken();
-    if (accessToken != null && await verifyToken(accessToken)) {
-      GoRouter.of(context).go('/dashboard');
-    }
-  }
-
-  @override
-  void initState() {
-    checkIfLoggedIn();
-    super.initState();
-  }
-
   void handleLogin() async {
     final username = _usernameController.text;
     final password = _passwordController.text;

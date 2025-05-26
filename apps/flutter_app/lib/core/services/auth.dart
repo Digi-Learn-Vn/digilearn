@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 const baseUrl =
-    'http://127.0.0.1:8000/accounts'; // Replace with your IP on real device
+    'http://127.0.0.1:8000/api/accounts'; // Updated to match the backend port
 
 final storage = FlutterSecureStorage();
 
@@ -86,7 +86,7 @@ Future<bool> refreshAccessToken() async {
   final refreshToken = await getRefreshToken();
   if (refreshToken == null) return false;
   final response = await http.post(
-    Uri.parse('http://127.0.0.1:8000/api/token/refresh/'),
+    Uri.parse('$baseUrl/refresh-token/'),
     headers: {'Content-Type': 'application/json'},
     body: jsonEncode({'refresh': refreshToken}),
   );
@@ -100,23 +100,10 @@ Future<bool> refreshAccessToken() async {
   }
 }
 
-Future<bool> verifyToken(String token) async {
-  final response = await http.post(
-    Uri.parse('$baseUrl/token/verify/'),
-    headers: {'Content-Type': 'application/json'},
-    body: jsonEncode({'token': token}),
-  );
-  if (response.statusCode == 200) {
-    return true; // Token is valid
-  } else {
-    return false; // Token is invalid or expired
-  }
-}
-
 Future<http.Response?> authenticatedRequest(String url,
     {String method = 'GET', Map<String, dynamic>? body}) async {
   String? accessToken = await getAccessToken();
-  if (accessToken == null || !(await verifyToken(accessToken))) {
+  if (accessToken == null) {
     bool refreshed = await refreshAccessToken();
     if (!refreshed) return null;
     accessToken = await getAccessToken();
