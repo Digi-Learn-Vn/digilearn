@@ -1,6 +1,5 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:go_router/go_router.dart';
 
 class ExploreSection extends StatefulWidget {
   final ValueNotifier<bool> isDarkTheme;
@@ -109,10 +108,7 @@ class _ExploreSectionState extends State<ExploreSection>
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
               onTap: () async {
-                final url = Uri.parse('https://enterprise.example.com');
-                if (await canLaunchUrl(url)) {
-                  await launchUrl(url);
-                }
+                GoRouter.of(context).go('/explore');
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,

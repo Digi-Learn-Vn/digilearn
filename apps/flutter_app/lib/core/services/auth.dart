@@ -137,3 +137,11 @@ Future<Map<String, dynamic>?> getUserProfile() async {
     return null;
   }
 }
+
+class Auth {
+  static Future<bool> isLoggedIn() async {
+    // Placeholder implementation
+    // Replace with actual logic to check authentication status
+    return Future.value(true); // Assume user is logged in for now
+  }
+}

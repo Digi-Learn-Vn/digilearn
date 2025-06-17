@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_app/pages/landing/landing_page.dart';
 import 'package:flutter_app/pages/account/signin_page.dart';
 import 'package:flutter_app/pages/account/signup_page.dart';
-import 'package:flutter_app/pages/dashboard/dashboard.dart';
+import 'package:flutter_app/pages/explore/explore_page.dart';
+import 'package:flutter_app/pages/discuss/discuss_page.dart';
 
 class AppRoutes {
   static final GoRouter router = GoRouter(
@@ -18,7 +19,8 @@ class AppRoutes {
       ),
       GoRoute(
           path: '/account/signup', builder: (context, state) => SignupPage()),
-      GoRoute(path: '/dashboard', builder: (context, state) => DashboardPage()),
+      GoRoute(path: '/explore', builder: (context, state) => ExplorePage()),
+      GoRoute(path: '/discuss', builder: (context, state) => DiscussPage()),
     ],
     errorBuilder: (context, state) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

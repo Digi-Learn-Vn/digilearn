@@ -30,7 +30,7 @@ class _SigninPageState extends State<SigninPage> {
 
     final result = await login(username, password);
     if (result['status'] == 200) {
-      GoRouter.of(context).go('/dashboard');
+      GoRouter.of(context).go('/explore');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -66,6 +66,26 @@ class _SigninPageState extends State<SigninPage> {
                     height: 40,
                   ),
                 ),
+              ),
+              const SizedBox(width: 32),
+              _NavLink(
+                label: 'Explore',
+                isActive: false,
+                onTap: () {
+                  GoRouter.of(context).go('/explore');
+                },
+                isDarkTheme: themeProvider.isDarkTheme,
+                fontSize: 16,
+              ),
+              const SizedBox(width: 16),
+              _NavLink(
+                label: 'Discuss',
+                isActive: false,
+                onTap: () {
+                  GoRouter.of(context).go('/discuss');
+                },
+                isDarkTheme: themeProvider.isDarkTheme,
+                fontSize: 16,
               ),
             ],
           ),
@@ -218,6 +238,40 @@ class _SigninPageState extends State<SigninPage> {
           style: TextStyle(
             fontSize: fontSize,
             color: themeProvider.isDarkTheme ? Colors.black : Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavLink extends StatelessWidget {
+  final String label;
+  final bool isActive;
+  final VoidCallback onTap;
+  final bool isDarkTheme;
+  final double fontSize;
+
+  const _NavLink({
+    required this.label,
+    required this.isActive,
+    required this.onTap,
+    required this.isDarkTheme,
+    required this.fontSize,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            color: isDarkTheme ? Colors.black : Colors.white,
           ),
         ),
       ),
